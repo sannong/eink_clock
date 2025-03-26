@@ -33,6 +33,8 @@ Raspberry Pi OS Lite 64-bit was used for this project. This allow operating the 
 1. Assemble case and boards per instructions here: https://thepihut.com/blogs/raspberry-pi-tutorials/pi-zero-case-for-waveshare-2-13-eink-display-assembly-instructions
     - Note: Be sure to insert the SD card before assembling the board into the case as it's much easier than after it's assembled
 
+<img src="./Images/case1.jpg" alt="case setup" width="400"/>
+
 ## Raspberry Pi Configuration
 
 Once the SD card is programmed and the case/boards assembled verify boot and access via SSH. Again I followed this guide to establish the connection and update the OS/packages: https://peppe8o.com/install-raspberry-pi-os-lite-in-your-raspberry-pi/
@@ -60,3 +62,5 @@ After installation I was able to run the python demo code and see the e-ink disp
 Run the code and see if it works!
 
         python3 eink.py
+
+<img src="./Images/demo1.jpg" alt="Test Run of Code" width="400"/>
