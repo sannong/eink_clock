@@ -4,28 +4,27 @@
 # https://www.reddit.com/r/raspberry_pi/comments/vi2xow/i_made_a_basic_clock_with_a_pi_zero_and_an_eink/?utm_source=share&utm_medium=web2x&context=3
 import sys
 import os
-
-picdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'pic')
-libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
+picdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pic')
+libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
 if os.path.exists(libdir):
     sys.path.append(libdir)
-    
+print(libdir)    
 import logging
-from waveshare_epd import epd2in13_V2
+from waveshare_epd import epd2in13_V4
 import time
 from datetime import datetime
 from PIL import Image,ImageDraw,ImageFont
 
 logging.basicConfig(level=logging.DEBUG)
 
-epd = epd2in13_V2.EPD()
+epd = epd2in13_V4.EPD()
 
 try:    
     font52 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 52)
     font24 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 24)
     
     logging.info("init and Clear")
-    epd.init(epd.FULL_UPDATE)
+    epd.init()
     epd.Clear(0xFF)
     
     # partial update
