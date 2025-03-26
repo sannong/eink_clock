@@ -48,3 +48,15 @@ Follow the Waveshare guide here to configure the OS and install the needed libra
 - Note: I did not install wiringPi as it's no longer maintained by the original creator as seems deprecated now?
 
 After installation I was able to run the python demo code and see the e-ink display function.
+
+## GitHub Code Setup
+
+1. Pull down the github code repo to the device home folder: https://github.com/sannong/eink_clock
+2. Copy the "lib" and "pic" folders from the Waveshare library to the same folder as the github project (so they are at the same folder level as the eink.py file)
+    - These are located at ~/e-Paper/RaspberryPi_JetsonNano/python in the default Waveshare library installation
+
+### Test Run
+
+Run the code and see if it works!
+
+        python3 eink.py
