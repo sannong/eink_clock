@@ -32,25 +32,26 @@ try:
     
     # partial update
     logging.info("4.show time...")
+
+    time_image = Image.new('1', (epd.height, epd.width), 255)
+    time_image2 = Image.new('1', (epd.height, epd.width), 255)
+    time_draw = ImageDraw.Draw(time_image)
+    epd.displayPartBaseImage(epd.getbuffer(time_image2))
+    start_hour = datetime.now().hour
         
     while (True):
-        time_image = Image.new('1', (epd.height, epd.width), 255)
-        time_draw = ImageDraw.Draw(time_image)
+          
+        if (start_hour != datetime.now().hour):
+            start_hour = datetime.now().hour
+            epd.init()
+            epd.Clear(0xFF)
+            epd.displayPartBaseImage(epd.getbuffer(time_image2))
+            
         time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
         time_draw.text((125, 61), datetime.now().strftime('%H:%M'), font = font52, fill = 0, anchor="mm")
-        time_draw.text((125, 122), datetime.now().strftime('%a, %d %B %Y'), font = font24, fill = 0, anchor="md")
-        epd.display(epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
-  
-        if 0: # commented out for now
-            if (datetime.now().hour == 0):
-                seconds_until_next_630 = (datetime.timedelta(hours=24) - (now - now.replace(hour=6, minute=30, second=0, microsecond=0))).total_seconds() % (24 * 3600)
-                epd.Clear(0xFF)
-                epd.sleep()
-                time.sleep(seconds_until_next_630)
-                epd.init()
-                epd.Clear(0xFF)
-                continue
-            
+        time_draw.text((125, 122), datetime.now().strftime('%a, %d %B'), font = font24, fill = 0, anchor="md")
+        epd.displayPartial(epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
+        
         now = datetime.now()
         seconds_until_next_minute = 60 - now.time().second
         time.sleep(seconds_until_next_minute)
@@ -58,9 +59,10 @@ try:
 except IOError as e:
     logging.info(e)
     
-except KeyboardInterrupt:   
-    epd.Clear(0xFF) 
+except KeyboardInterrupt:  
+    epd.init() 
+    epd.Clear(0xFF)
     epd.sleep()
     logging.info("ctrl + c:")
-    epd2in13_V2.epdconfig.module_exit()
+    epd2in13_V4.epdconfig.module_exit()
     exit()
