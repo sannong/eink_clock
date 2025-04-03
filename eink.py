@@ -51,7 +51,7 @@ try:
             epd.displayPartBaseImage(epd.getbuffer(time_image2))
             
         time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
-        time_draw.text((125, 55), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
+        time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
         time_draw.text((125, 122), datetime.now().strftime('%a, %d %B'), font = font30, fill = 0, anchor="md")
         epd.displayPartial(epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
         
