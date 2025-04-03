@@ -61,6 +61,17 @@ After installation I was able to run the python demo code and see the e-ink disp
 2. Copy the "lib" and "pic" folders from the Waveshare library to the same folder as the github project (so they are at the same folder level as the eink.py file)
     - These are located at ~/e-Paper/RaspberryPi_JetsonNano/python in the default Waveshare library installation
 
+### .env File
+
+To preserve security a local .env file is used to maintain the OpenweatherMap API key, zip code, and locale. A .env file must be created in the same directory as the python script and contains the following where the developer must fill in the appropriate values for each field.
+
+        # .env file
+        WEATHER_API_KEY = "<api key>"
+        ZIP_CODE = "<zip code>"
+        LOCAL = "<locale>"
+        
+A unique OpenweatherApp key must be created by the developer. The OpenweatherMap API key and documentation is here: https://openweathermap.org/api. See this for more information on API keys and settings [Real-Time Weather with Raspberry Pi 4](https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f)
+
 ### Test Run
 
 Run the code and see if it works! Press ctrl+c to terminate (the script will clean up and reset the display before terminating so give it a second after pressing ctrl+c)
