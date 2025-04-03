@@ -11,6 +11,8 @@ The following existing projects/reddit posts were used as reference, starting po
 - [I made a basic clock with a pi zero and an e-ink display](https://www.reddit.com/r/raspberry_pi/comments/vi2xow/i_made_a_basic_clock_with_a_pi_zero_and_an_eink/)
 - [Raspberry Pi project ideas: e-ink calendar and clock](https://picockpit.com/raspberry-pi/raspberry-pi-project-ideas-e-ink-calendar-clock/)
 - [E-paper Calendar using RPI Zero W - CalDAV support](https://www.reddit.com/r/raspberry_pi/comments/v4ub12/epaper_calendar_using_rpi_zero_w_caldav_support/)
+- [Raspberry Pi E-Ink Weather Station using Python](https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python/weather-station-code)
+- [Real-Time Weather with Raspberry Pi 4](https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f)
 
 ## Hardware
 
