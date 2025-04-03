@@ -61,6 +61,20 @@ After installation I was able to run the python demo code and see the e-ink disp
 
 ### Test Run
 
-Run the code and see if it works!
+Run the code and see if it works! Press ctrl+c to terminate (the script will clean up and reset the display before terminating so give it a second after pressing ctrl+c)
 
         python eink.py
+
+### Auto-Run
+
+To make the script auto-run at boot I created a cron job as follows:
+
+1. Give the following command to open the crontab
+
+        crontab -e
+
+2. In the crontab editor add the following line at the bottom (adjusting the path as needed for a particular install)
+
+        @reboot python ~/eink_clock/eink.py &
+
+3. Save the file and reboot.
