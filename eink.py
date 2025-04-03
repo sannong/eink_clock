@@ -25,12 +25,18 @@ import time
 from datetime import datetime
 from PIL import Image,ImageDraw,ImageFont
 from pprint import pprint
+from dotenv import load_doten
+
+# Load environment variables from .env file
+# This contains the OpenWeatherMap API key
+load_dotenv()
+weather_api_key = os.getenv("WEATHER_PI_KEY")
 
 # OpenWeatherMap API key and settings
 # API reference: https://openweathermap.org/current
 # Help/concept from: https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f
 settings = {
-    'api_key':'80c36effec1454b7c7a9c2570f6ac995',
+    'api_key':weather_api_key,
     'zip_code':'60625',
     'country_code':'us',
     'temp_unit':'imperial'} #unit can be metric, imperial, or kelvin
