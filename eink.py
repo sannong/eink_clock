@@ -96,7 +96,7 @@ try:
     # Get the weather data for the first time
     weather_data = requests.get(final_url).json()
     pprint(weather_data)    # print to console just for information
-    temperature = int(weather_data["main"]["temp"]) # temperature in Fahrenheit
+    temperature = str(round(weather_data["main"]["temp"])) # temperature in Fahrenheit
     weather_icon = ICON_MAP[weather_data["weather"][0]["icon"]] # weather icon code
         
     while (True):
@@ -111,12 +111,12 @@ try:
         #update weather every 10 minutes
         if (datetime.now().minute % 10 == 0):
             weather_data = requests.get(final_url).json()
-            temperature = int(weather_data["main"]["temp"])
+            temperature = str(round(weather_data["main"]["temp"]))
             weather_icon = ICON_MAP[weather_data["weather"][0]["icon"]]
             
         time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
         time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
-        time_draw.text((125, 122), datetime.now().strftime('%d/%m') + " - " + str(temperature) + "°F", font = font30, fill = 0, anchor="md")
+        time_draw.text((125, 122), datetime.now().strftime('%d/%m') + " - " + temperature + "°F", font = font30, fill = 0, anchor="md")
         time_draw.text((240, 122), weather_icon, font = icon_font, fill = 0, anchor="rd")
         epd.displayPartial(epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
         
