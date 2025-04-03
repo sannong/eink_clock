@@ -22,7 +22,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 epd = epd2in13_V4.EPD()
 
-try:    
+try:
+    font96 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 96)   
+    font72 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 72)    
     font52 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 52)
     font24 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 24)
     
@@ -48,7 +50,7 @@ try:
             epd.displayPartBaseImage(epd.getbuffer(time_image2))
             
         time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
-        time_draw.text((125, 61), datetime.now().strftime('%H:%M'), font = font52, fill = 0, anchor="mm")
+        time_draw.text((125, 61), datetime.now().strftime('%H:%M'), font = font72, fill = 0, anchor="mm")
         time_draw.text((125, 122), datetime.now().strftime('%a, %d %B'), font = font24, fill = 0, anchor="md")
         epd.displayPartial(epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
         
