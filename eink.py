@@ -1,16 +1,23 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-# Initially copied from https://pastebin.com/VwYQcFD3 and reddit thread and modified
+#
+# Basic clock with e-ink display and weather data
+# Designed for Waveshare 2.13" e-ink display (V4) and Raspberry Pi Zero W
+#
+# The code is based on the Waveshare example code for the 2.13" e-ink display and the following reddit thread:
 # https://www.reddit.com/r/raspberry_pi/comments/vi2xow/i_made_a_basic_clock_with_a_pi_zero_and_an_eink/?utm_source=share&utm_medium=web2x&context=3
+#
 
 import sys
 import os
-picdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pic')
-libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
+picdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pic')   # path to the waveshare images/fonts
+libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')   # path to the waveshare  libraries
+icondir = os.path.dirname(os.path.realpath(__file__))  # path to the meteocons font
 if os.path.exists(libdir):
     sys.path.append(libdir)
 print(libdir)
 print(picdir)     
+print(icondir)     
 import requests
 import logging
 from waveshare_epd import epd2in13_V4
@@ -19,17 +26,20 @@ from datetime import datetime
 from PIL import Image,ImageDraw,ImageFont
 from pprint import pprint
 
+# OpenWeatherMap API key and settings
+# API reference: https://openweathermap.org/current
+# Help/concept from: https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f
 settings = {
     'api_key':'80c36effec1454b7c7a9c2570f6ac995',
     'zip_code':'60625',
     'country_code':'us',
     'temp_unit':'imperial'} #unit can be metric, imperial, or kelvin
-
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather?appid={0}&zip={1},{2}&units={3}"
 final_url = BASE_URL.format(settings["api_key"],settings["zip_code"],settings["country_code"],settings["temp_unit"])
 
 # Map the OpenWeatherMap icon code to the appropriate font character
-# See http://www.alessioatzeni.com/meteocons/ for icons
+# Icon source: http://www.alessioatzeni.com/meteocons/ 
+# Help/concept from: https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python/weather-station-code
 ICON_MAP = {
     "01d": "B",
     "01n": "C",
@@ -53,7 +63,7 @@ ICON_MAP = {
 
 font76 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 76)   
 font30 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 30)
-icon_font = ImageFont.truetype("meteocons.ttf", 30)
+icon_font = ImageFont.truetype(os.path.join(icondir, "meteocons.ttf"), 30)
     
 logging.basicConfig(level=logging.DEBUG)
 

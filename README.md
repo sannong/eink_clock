@@ -2,6 +2,8 @@
 
 This is a simple e-ink raspberry pi zero clock.
 
+<img src="./Images/clock.jpg" alt="Test Run of Code" width="400"/>
+
 ## References
 
 The following existing projects/reddit posts were used as reference, starting point, and inspiration for this work and are given credit here:
@@ -61,6 +63,4 @@ After installation I was able to run the python demo code and see the e-ink disp
 
 Run the code and see if it works!
 
-        python3 eink.py
-
-<img src="./Images/demo1.jpg" alt="Test Run of Code" width="400"/>
+        python eink.py
