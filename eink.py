@@ -25,20 +25,22 @@ import time
 from datetime import datetime
 from PIL import Image,ImageDraw,ImageFont
 from pprint import pprint
-from dotenv import load_doten
+import dotenv 
 
 # Load environment variables from .env file
 # This contains the OpenWeatherMap API key
-load_dotenv()
-weather_api_key = os.getenv("WEATHER_PI_KEY")
+dotenv.load_dotenv()
+weather_api_key = os.getenv("WEATHER_API_KEY")
+zip_code = os.getenv("ZIP_CODE")
+local = os.getenv("LOCAL")
 
 # OpenWeatherMap API key and settings
 # API reference: https://openweathermap.org/current
 # Help/concept from: https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f
 settings = {
     'api_key':weather_api_key,
-    'zip_code':'60625',
-    'country_code':'us',
+    'zip_code':zip_code,
+    'country_code':local,
     'temp_unit':'imperial'} #unit can be metric, imperial, or kelvin
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather?appid={0}&zip={1},{2}&units={3}"
 final_url = BASE_URL.format(settings["api_key"],settings["zip_code"],settings["country_code"],settings["temp_unit"])
