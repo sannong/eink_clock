@@ -69,6 +69,7 @@ ICON_MAP = {
     "50n": "K",
 }
 
+# Fonts used for the display
 font76 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 76)   
 font30 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 30)
 icon_font = ImageFont.truetype(os.path.join(icondir, "meteocons.ttf"), 30)
@@ -85,7 +86,7 @@ class EinkClass(object):
         print(self.epd.height)   #debugging purposes
         print(self.epd.width)
 
-
+    # Display the time and weather data on the e-ink display
     def display(self):
         # Get the weather data for the first time
         self.get_weather_data()
@@ -110,23 +111,35 @@ class EinkClass(object):
             #update weather every 10 minutes
             if (datetime.now().minute % 10 == 0):
                 self.get_weather_data()
-                
+            
+            # Create the date and weather strings to display taking 
+            # into account the desired spacing   
             dateStr = datetime.now().strftime('%m/%d') + "  "
             tempStr = "  " + self.temperature + "°F "
             iconStr = self.weather_icon 
             
+            # Get the length of the strings so that we can compute
+            # the position to display them in the center of the screen
             dateLen = time_draw.textlength(dateStr, font=font30)  
             tempLen = time_draw.textlength(tempStr, font=font30) 
             iconLen = time_draw.textlength(iconStr, font=icon_font)
 
+            # Draw the new screen
+            # Blank rectangle to start with
             time_draw.rectangle((0, 0, self.epd.height, self.epd.width), fill = 255)
+            # Draw the time, large, centered, on the top
             time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
-            time_draw.text((125 - dateLen, 122), dateStr, font = font30, fill = 0, anchor="ld")
-            time_draw.text((125, 122), " - ", font = font30, fill = 0, anchor="md")
-            time_draw.text((125 + tempLen, 122), tempStr, font = font30, fill = 0, anchor="rd")
-            time_draw.text((125 + tempLen + iconLen, 122), iconStr, font = icon_font, fill = 0, anchor="rd")
+            # Draw the date - temperature weather icon, centered below the time. We use the text anchor
+            # and computed lengths to center the text in the middle of the screen. 
+            # The middle bottom of the screen is at (125, 122)
+            time_draw.text((125 - dateLen, 122), dateStr, font = font30, fill = 0, anchor="ld") # date
+            time_draw.text((125, 122), " - ", font = font30, fill = 0, anchor="md") # separator, centered
+            time_draw.text((125 + tempLen, 122), tempStr, font = font30, fill = 0, anchor="rd") # temperature
+            time_draw.text((125 + tempLen + iconLen, 122), iconStr, font = icon_font, fill = 0, anchor="rd") # weather icon
+            # Now draw the image to the display (180 degrees rotated to account for the case mounting)
             self.epd.displayPartial(self.epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
             
+            # Wait until the next minute to update the display
             now = datetime.now()
             seconds_until_next_minute = 60 - now.time().second
             time.sleep(seconds_until_next_minute)
@@ -138,10 +151,8 @@ class EinkClass(object):
         self.weather_icon = ICON_MAP[self.weather_data["weather"][0]["icon"]] # weather icon code
 
     def __del__(self):
-        self.epd.init() 
         self.epd.Clear(0xFF)
         self.epd.sleep()
-
         logging.info("ctrl + c:")
         epd2in13_V4.epdconfig.module_exit()
 
