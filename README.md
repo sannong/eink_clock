@@ -1,6 +1,6 @@
 # E-ink Raspberry Pi Clock
 
-This is a simple e-ink raspberry pi zero clock.
+This is a simple e-ink raspberry pi zero clock with date and current weather.
 
 <img src="./Images/clock.jpg" alt="Test Run of Code" width="400"/>
 
@@ -61,6 +61,19 @@ After installation I was able to run the python demo code and see the e-ink disp
 2. Copy the "lib" and "pic" folders from the Waveshare library to the same folder as the github project (so they are at the same folder level as the eink.py file)
     - These are located at ~/e-Paper/RaspberryPi_JetsonNano/python in the default Waveshare library installation
 
+### Additional Python Libraries
+
+Install the following additional python libraries
+
+        apt-get instal python3-dotenv
+
+### OpenweatherMap API
+
+The weather data uses the OpenweatherMap API to get the current temperature and weather type. A unique OpenweatherApp key must be created by the developer in order to access the API.
+
+- The OpenweatherMap API key and documentation is here: https://openweathermap.org/api. 
+- See this for more information on API keys and settings [Real-Time Weather with Raspberry Pi 4](https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f)
+
 ### .env File
 
 To preserve security a local .env file is used to maintain the OpenweatherMap API key, zip code, and locale. A .env file must be created in the same directory as the python script and contains the following where the developer must fill in the appropriate values for each field.
@@ -70,8 +83,6 @@ To preserve security a local .env file is used to maintain the OpenweatherMap AP
         ZIP_CODE = "<zip code>"
         LOCAL = "<locale>"
         
-A unique OpenweatherApp key must be created by the developer. The OpenweatherMap API key and documentation is here: https://openweathermap.org/api. See this for more information on API keys and settings [Real-Time Weather with Raspberry Pi 4](https://www.hackster.io/gatoninja236/real-time-weather-with-raspberry-pi-4-ad621f)
-
 ### Test Run
 
 Run the code and see if it works! Press ctrl+c to terminate (the script will clean up and reset the display before terminating so give it a second after pressing ctrl+c)
