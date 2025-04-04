@@ -75,78 +75,81 @@ icon_font = ImageFont.truetype(os.path.join(icondir, "meteocons.ttf"), 30)
     
 logging.basicConfig(level=logging.DEBUG)
 
-epd = epd2in13_V4.EPD()
-print(epd.height)   #debugging purposes
-print(epd.width)
+class EinkClass(object):
+    def __init__(self):
+        logging.info("init and Clear")
+        self.epd = epd2in13_V4.EPD()
+        self.epd.init()
+        self.epd.Clear(0xFF)
+        print(self.epd.height)   #debugging purposes
+        print(self.epd.width)
 
-# Weather data global variables
-weather_data = None
-temperature = None
-weather_icon = None
 
-#function to get the weather data from OpenWeatherMap API
-def get_weather_data():
-    weather_data = requests.get(weather_url).json()
-    temperature = str(round(weather_data["main"]["temp"])) # temperature in Fahrenheit
-    weather_icon = ICON_MAP[weather_data["weather"][0]["icon"]] # weather icon code
+    def display(self):
+        # Get the weather data for the first time
+        self.get_weather_data()
+        pprint(self.weather_data)    # print to console just for information
+        
+        logging.info("show time...")
+        
+        time_image = Image.new('1', (self.epd.height, self.epd.width), 255)
+        time_image2 = Image.new('1', (self.epd.height, self.epd.width), 255)
+        time_draw = ImageDraw.Draw(time_image)
+        self.epd.displayPartBaseImage(self.epd.getbuffer(time_image2))
+        start_hour = datetime.now().hour
+            
+        while (True):
+        
+            # Refresh the display every hour  
+            if (start_hour != datetime.now().hour):
+                start_hour = datetime.now().hour
+                self.epd.Clear(0xFF)
+                self.epd.displayPartBaseImage(self.epd.getbuffer(time_image2))
+            
+            #update weather every 10 minutes
+            if (datetime.now().minute % 10 == 0):
+                self.get_weather_data()
+                
+            dateStr = datetime.now().strftime('%m/%d') + "   "
+            tempStr = "   " + self.temperature + "°F"
+            iconStr = "   " + self.weather_icon 
+            
+            dateLen = time_draw.textlength(dateStr, font=font30)  
+            tempLen = time_draw.textlength(tempStr, font=font30) 
+            iconLen = time_draw.textlength(iconStr, font=icon_font)
+                
+            #time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
+            time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
+            time_draw.text((125 - dateLen, 122), dateStr, font = font30, fill = 0, anchor="ld")
+            time_draw.text((125, 122), " - ", font = font30, fill = 0, anchor="md")
+            time_draw.text((125 + tempLen, 122), tempStr, font = font30, fill = 0, anchor="rd")
+            time_draw.text((125 + tempLen + iconLen, 122), iconStr, font = icon_font, fill = 0, anchor="rd")
+            self.epd.displayPartial(self.epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
+            
+            now = datetime.now()
+            seconds_until_next_minute = 60 - now.time().second
+            time.sleep(seconds_until_next_minute)
+
+    #function to get the weather data from OpenWeatherMap API
+    def get_weather_data(self):
+        self.weather_data = requests.get(weather_url).json()
+        self.temperature = str(round(self.weather_data["main"]["temp"])) # temperature in Fahrenheit
+        self.weather_icon = ICON_MAP[self.weather_data["weather"][0]["icon"]] # weather icon code
+
+    def __del__(self):
+        self.epd.init() 
+        self.epd.Clear(0xFF)
+        self.epd.sleep()
+        logging.info("ctrl + c:")
+        epd2in13_V4.epdconfig.module_exit()
 
 try:
-    logging.info("init and Clear")
-    epd.init()
-    epd.Clear(0xFF)
-    
-    # partial update
-    logging.info("4.show time...")
+    eink = EinkClass()
+    eink.display()
 
-    time_image = Image.new('1', (epd.height, epd.width), 255)
-    time_image2 = Image.new('1', (epd.height, epd.width), 255)
-    time_draw = ImageDraw.Draw(time_image)
-    epd.displayPartBaseImage(epd.getbuffer(time_image2))
-    start_hour = datetime.now().hour
-    
-    # Get the weather data for the first time
-    get_weather_data()
-    pprint(weather_data)    # print to console just for information
-        
-    while (True):
-          
-        # Refresh the display every hour  
-        if (start_hour != datetime.now().hour):
-            start_hour = datetime.now().hour
-            epd.Clear(0xFF)
-            epd.displayPartBaseImage(epd.getbuffer(time_image2))
-        
-        #update weather every 10 minutes
-        if (datetime.now().minute % 10 == 0):
-            get_weather_data()
-            
-        dateStr = datetime.now().strftime('%m/%d') + " "
-        tempStr = " " + temperature + "°F"
-        iconStr = "   " + weather_icon 
-        
-        dateLen = time_draw.textlength(dateStr, font=font30)  
-        tempLen = time_draw.textlength(tempStr, font=font30) 
-        iconLen = time_draw.textlength(iconStr, font=icon_font)
-            
-        #time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
-        time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
-        time_draw.text((125 - dateLen, 122), dateStr, font = font30, fill = 0, anchor="ld")
-        time_draw.text((125, 122), " - ", font = font30, fill = 0, anchor="md")
-        time_draw.text((125 + tempLen, 122), tempStr, font = font30, fill = 0, anchor="rd")
-        time_draw.text((125 + tempLen + iconLen, 122), iconStr, font = icon_font, fill = 0, anchor="rd")
-        epd.displayPartial(epd.getbuffer(time_image.transpose(Image.ROTATE_180)))
-        
-        now = datetime.now()
-        seconds_until_next_minute = 60 - now.time().second
-        time.sleep(seconds_until_next_minute)
-    
 except IOError as e:
     logging.info(e)
     
 except KeyboardInterrupt:  
-    epd.init() 
-    epd.Clear(0xFF)
-    epd.sleep()
-    logging.info("ctrl + c:")
-    epd2in13_V4.epdconfig.module_exit()
+    del eink
     exit()
