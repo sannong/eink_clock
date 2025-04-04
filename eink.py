@@ -82,7 +82,7 @@ class EinkClass(object):
         logging.info("init and Clear")
         self.epd = epd2in13_V4.EPD()
         self.epd.init()
-        self.epd.Clear(0xFF)
+        self.epd.Clear()
         print(self.epd.height)   #debugging purposes
         print(self.epd.width)
 
@@ -105,7 +105,7 @@ class EinkClass(object):
             # Refresh the display every hour  
             if (start_hour != datetime.now().hour):
                 start_hour = datetime.now().hour
-                self.epd.Clear(0xFF)
+                self.epd.Clear()
                 self.epd.displayPartBaseImage(self.epd.getbuffer(time_image2))
             
             #update weather every 10 minutes
@@ -151,7 +151,8 @@ class EinkClass(object):
         self.weather_icon = ICON_MAP[self.weather_data["weather"][0]["icon"]] # weather icon code
 
     def __del__(self):
-        self.epd.Clear(0xFF)
+        self.epd.init()
+        self.epd.Clear()
         self.epd.sleep()
         logging.info("ctrl + c:")
         epd2in13_V4.epdconfig.module_exit()
