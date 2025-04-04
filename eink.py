@@ -75,6 +75,7 @@ icon_font = ImageFont.truetype(os.path.join(icondir, "meteocons.ttf"), 30)
     
 logging.basicConfig(level=logging.DEBUG)
 
+# eink base class
 class EinkClass(object):
     def __init__(self):
         logging.info("init and Clear")
@@ -110,15 +111,15 @@ class EinkClass(object):
             if (datetime.now().minute % 10 == 0):
                 self.get_weather_data()
                 
-            dateStr = datetime.now().strftime('%m/%d') + "   "
-            tempStr = "   " + self.temperature + "°F"
-            iconStr = "   " + self.weather_icon 
+            dateStr = datetime.now().strftime('%m/%d') + "  "
+            tempStr = "  " + self.temperature + "°F "
+            iconStr = self.weather_icon 
             
             dateLen = time_draw.textlength(dateStr, font=font30)  
             tempLen = time_draw.textlength(tempStr, font=font30) 
             iconLen = time_draw.textlength(iconStr, font=icon_font)
-                
-            #time_draw.rectangle((0, 0, epd.height, epd.width), fill = 255)
+
+            time_draw.rectangle((0, 0, self.epd.height, self.epd.width), fill = 255)
             time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
             time_draw.text((125 - dateLen, 122), dateStr, font = font30, fill = 0, anchor="ld")
             time_draw.text((125, 122), " - ", font = font30, fill = 0, anchor="md")
@@ -140,6 +141,7 @@ class EinkClass(object):
         self.epd.init() 
         self.epd.Clear(0xFF)
         self.epd.sleep()
+
         logging.info("ctrl + c:")
         epd2in13_V4.epdconfig.module_exit()
 
