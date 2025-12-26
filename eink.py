@@ -41,7 +41,7 @@ settings = {
     'api_key':weather_api_key,
     'zip_code':zip_code,
     'country_code':local,
-    'temp_unit':'imperial'} #unit can be metric, imperial, or kelvin
+    'temp_unit':'metric'} #unit can be metric, imperial, or kelvin
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather?appid={0}&zip={1},{2}&units={3}"
 weather_url = BASE_URL.format(settings["api_key"],settings["zip_code"],settings["country_code"],settings["temp_unit"])
 
@@ -98,13 +98,13 @@ class EinkClass(object):
         time_image2 = Image.new('1', (self.epd.height, self.epd.width), 255)
         time_draw = ImageDraw.Draw(time_image)
         self.epd.displayPartBaseImage(self.epd.getbuffer(time_image2))
-        start_hour = datetime.now().hour
+        start_day = datetime.now().day
             
         while (True):
         
-            # Refresh the display every hour  
-            if (start_hour != datetime.now().hour):
-                start_hour = datetime.now().hour
+            # Refresh the display every day  
+            if (start_day != datetime.now().day):
+                start_day = datetime.now().day
                 self.epd.Clear()
                 self.epd.displayPartBaseImage(self.epd.getbuffer(time_image2))
             
@@ -114,8 +114,8 @@ class EinkClass(object):
             
             # Create the date and weather strings to display taking 
             # into account the desired spacing   
-            dateStr = datetime.now().strftime('%m/%d') + "  "
-            tempStr = "  " + self.temperature + "°F "
+            dateStr = datetime.now().strftime('%d/%m') + "  "
+            tempStr = "  " + self.temperature + "°C "
             iconStr = self.weather_icon 
             
             # Get the length of the strings so that we can compute
@@ -128,12 +128,12 @@ class EinkClass(object):
             # Blank rectangle to start with
             time_draw.rectangle((0, 0, self.epd.height, self.epd.width), fill = 255)
             # Draw the time, large, centered, on the top
-            time_draw.text((125, 50), datetime.now().strftime('%H:%M'), font = font76, fill = 0, anchor="mm")
+            time_draw.text((125, 50), datetime.now().strftime('%H.%M'), font = font76, fill = 0, anchor="mm")
             # Draw the date - temperature weather icon, centered below the time. We use the text anchor
             # and computed lengths to center the text in the middle of the screen. 
             # The middle bottom of the screen is at (125, 122)
             time_draw.text((125 - dateLen, 122), dateStr, font = font30, fill = 0, anchor="ld") # date
-            time_draw.text((125, 122), " - ", font = font30, fill = 0, anchor="md") # separator, centered
+            time_draw.text((125, 122), "  ", font = font30, fill = 0, anchor="md") # separator, centered
             time_draw.text((125 + tempLen, 122), tempStr, font = font30, fill = 0, anchor="rd") # temperature
             time_draw.text((125 + tempLen + iconLen, 122), iconStr, font = icon_font, fill = 0, anchor="rd") # weather icon
             # Now draw the image to the display (180 degrees rotated to account for the case mounting)

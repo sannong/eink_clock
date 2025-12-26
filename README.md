@@ -65,7 +65,7 @@ After installation I was able to run the python demo code and see the e-ink disp
 
 Install the following additional python libraries
 
-        apt-get instal python3-dotenv
+        sudo apt-get install python3-dotenv
 
 ### OpenweatherMap API
 
